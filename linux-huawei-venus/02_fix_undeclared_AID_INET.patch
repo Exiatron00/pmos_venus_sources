@@ -1,0 +1,16 @@
+diff --git a/net/core/sock.c b/net/core/sock.c
+index d149e9ae..962a9725 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -140,9 +140,9 @@
+ #include <net/tcp.h>
+ #endif
+ 
+-#ifdef CONFIG_ANDROID_PARANOID_NETWORK
++//#ifdef CONFIG_ANDROID_PARANOID_NETWORK
+ #include <linux/android_aid.h>
+-#endif
++//#endif
+ #include <net/busy_poll.h>
+ 
+ static DEFINE_MUTEX(proto_list_mutex);

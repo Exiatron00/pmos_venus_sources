@@ -1,0 +1,55 @@
+# Reference: <https://postmarketos.org/vendorkernel>
+# Kernel config based on: arch/arm64/configs/merge_hi6250_defconfig
+
+pkgname=linux-huawei-venus
+pkgver=4.1.18
+pkgrel=0
+pkgdesc="Huawei P9 Lite kernel fork"
+arch="aarch64"
+_carch="arm64"
+_flavor="huawei-venus"
+url="https://kernel.org"
+license="GPL-2.0-only"
+options="!strip !check !tracedeps pmb:cross-native"
+makedepends="
+	bash
+	bc
+	bison
+	devicepkg-dev
+	flex
+	openssl-dev
+	perl
+"
+
+# Source
+_repository="android_kernel_huawei_hi6250"
+_commit="3974040c0b4cb0e5677f995eae982b1cbe12bf34"
+_config="config-$_flavor.$arch"
+source="
+	$pkgname-$_commit.tar.gz::https://github.com/hi6250-5/$_repository/archive/$_commit.tar.gz
+	$_config
+	02_fix_undeclared_AID_INET.patch
+	04_make_rdr_hisi_adapter_compileable.patch
+"
+builddir="$srcdir/$_repository-$_commit"
+_outdir="out"
+
+prepare() {
+	default_prepare
+	. downstreamkernel_prepare
+}
+
+build() {
+	unset LDFLAGS
+	make O="$_outdir" ARCH="$_carch" CC="${CC:-gcc}" \
+		KBUILD_BUILD_VERSION="$((pkgrel + 1 ))-postmarketOS"
+}
+
+package() {
+	downstreamkernel_package "$builddir" "$pkgdir" "$_carch" "$_flavor" "$_outdir"
+}
+
+sha512sums="04ad111a8245b3636f9f5e4cf78a1b3741ae6c47adebe94221b59f14ada79fdb3c526c3fcc641026db27e4b867cf09c7c4faa6d5e0eef7ba5f96b82e136be2a5  linux-huawei-venus-3974040c0b4cb0e5677f995eae982b1cbe12bf34.tar.gz
+4245c9e76b252364c8856aa66e75de96a364dd036465be8adc9258f77a1b2c9d68832eaa42cbdc62bdaf3036149b0df3f5fc9177fe152cc25b28719ca0e143b8  config-huawei-venus.aarch64
+bc5f796c8d91f33f4427af8eae9df1606db62e992df7308a9fb2fc50ea77acf020074e6d3d279c2d628e3009af6a4f88c114b54bd7d3ca8fd7dea77a9f741c4d  02_fix_undeclared_AID_INET.patch
+cdc60b6c829df3b014226b9cb506ed71cf005cf5fec8d4339b54a23f052465501aaa4983ec00f33ef301db2e6a70b24a30439b3f6ce8f7c00348c05d3132ec3f  04_make_rdr_hisi_adapter_compileable.patch"
