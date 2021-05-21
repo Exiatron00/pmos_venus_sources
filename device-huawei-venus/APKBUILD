@@ -24,4 +24,4 @@ package() {
 	devicepkg_package $startdir $pkgname
 }
 
-sha512sums="3e38b6ac67ef99839f4f7e9754a2ab5203b82cdfc56bf14f27f421b92c85cc288640388b1e93f567c1b9da12a70d8c844c344ae00ed67d26df72b334c19c825e  deviceinfo"
+sha512sums="(run 'pmbootstrap checksum device-huawei-venus' to fill)"
